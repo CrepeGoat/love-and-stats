@@ -8,12 +8,26 @@ def nPk(n, k):
     return functools.reduce(operator.mul, range(n, n-k, -1), 1)
 
 
+def factorial(n):
+    return nPk(n, n)
+
+
 def nIk(n, k):
     """
     "n insert k" calculates the number of ways in which k elements can be
     inserted into an ordered sequence of n elements. 
     """
     return nPk(n+k, k)
+
+
+def iter_iIk(k):
+    """
+    Iterates through iIk values for a given k, for i=0 -> inf.
+    """
+    iIk = factorial(k)
+    for i in itertools.count(start=1):
+        yield iIk
+        iIk = (iIk // i) * (i+k)
 
 
 def ksumCk(*k_array):
