@@ -1,5 +1,19 @@
 import fractions
+import functools
 import itertools
+import operator
+
+
+def nPk(n, k):
+    return functools.reduce(operator.mul, range(n, n-k, -1), 1)
+
+
+def nIk(n, k):
+    """
+    "n insert k" calculates the number of ways in which k elements can be
+    inserted into an ordered sequence of n elements. 
+    """
+    return nPk(n+k, k)
 
 
 def ksumCk(*k_array):
