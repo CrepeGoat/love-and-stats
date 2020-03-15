@@ -1,4 +1,16 @@
 {
+	"build_systems": [
+		{
+			"name": "Run",
+			"cmd": "python3 $file",
+		},
+		{
+			"name": "Test",
+			"working_dir": "$project_path",
+			"cmd": ["venv/bin/python", "-m", "pytest"],
+		},
+	],
+
 	"folders":
 	[
 		{
