@@ -31,14 +31,15 @@ def gen_mar_lists(N, suffix=()):
         yield suffix
         return
 
+    min_i = max(0, suffix[0]-1) if len(suffix) else 0
     yield from (
         mar
-        for i in range(N+1)
+        for i in range(min_i, N+1)
         for mar in gen_mar_lists(N-1, (i,)+suffix) 
     )
 
 
-@pytest.mark.parametrize('some_mar_list', list(gen_mar_lists(4)))
+@pytest.mark.parametrize('some_mar_list', list(gen_mar_lists(5)))
 def test_mar(some_mar_list):
     assert (
         brute_force_expt_score(core.min_allowable_ranks(len(some_mar_list)))
