@@ -24,8 +24,22 @@ def brute_force_expt_score(mar_list):
     )
 
 
+def is_feasible(mar_list):
+    """
+    Regardless of how a MAR list is determined, the Rth place out of n+1 items
+    with m-1 items remaining is *always* better than Rth place out of n items
+    with m items remaining. Any MAR list that contradicts this rule is
+    "infeasible" and can be ruled out without further assessment.
+    """
+    pass
+
+
 def gen_mar_lists(N):
-    return itertools.product(*(range(i+2) for i in range(N)))
+    return (
+        mar_list
+        for mar_list in itertools.product(*(range(i+2) for i in range(N)))
+        if is_feasible(mar_list)
+    )
 
 
 @pytest.mark.parametrize('some_mar_list', list(gen_mar_lists(4)))
