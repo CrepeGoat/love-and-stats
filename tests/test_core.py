@@ -12,6 +12,8 @@ def play_game(item_ranks, mar_list):
         local_rank = bisect.bisect(past_ranks, rank)
         if local_rank >= mar:
             return rank
+        else:
+            past_ranks.insert(local_rank, rank)
 
     else:
         return -1
