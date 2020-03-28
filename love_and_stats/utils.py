@@ -57,9 +57,13 @@ def gen_mar_lists(N):
             yield suffix
             return
 
+        # If ith place out of n with m remaining is good enough,
+        # then ith place out of n+1 with m-1 remaining is also good enough
+        # -> a MAR-list that breaks this rule can*not* be optimal 
+        max_i = suffix[0] if suffix else N
         yield from (
             mar
-            for i in range(N+1)
+            for i in range(max_i+1)
             for mar in recurse(N-1, (i,)+suffix) 
         )
 
