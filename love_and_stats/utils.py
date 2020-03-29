@@ -42,3 +42,18 @@ def gen_mar_lists(N):
 
     return recurse(N)
 
+
+def min_list(iterable, key=lambda x: x):
+    it = iter(iterable)
+    try:
+        results = [next(it)]
+    except StopIteration:
+        return []
+
+    for item in it:
+        if key(item) < key(results[0]):
+            results = [item]
+        elif key(item) == key(results[0]):
+            results.append(item)
+
+    return results
