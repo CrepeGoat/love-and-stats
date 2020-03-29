@@ -40,10 +40,10 @@ def skippable_permutations(iterable, r=None):
 
 def play_game(item_ranks, mar_list):
     past_ranks = []
-    for rank, mar in zip(item_ranks, mar_list):
+    for i, (rank, mar) in enumerate(zip(item_ranks, mar_list)):
         local_rank = bisect.bisect(past_ranks, rank)
         if local_rank < mar:
-            return rank
+            return i
         else:
             past_ranks.insert(local_rank, rank)
 
@@ -53,7 +53,7 @@ def play_game(item_ranks, mar_list):
 
 def brute_force_expt_score(mar_list):
     return statistics.mean(
-        play_game(item_ranks, mar_list)
+        item_ranks[play_game(item_ranks, mar_list)]
         for item_ranks in permutations(range(len(mar_list)))
     )
 
