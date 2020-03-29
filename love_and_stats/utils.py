@@ -3,6 +3,41 @@ from itertools import permutations
 import statistics
 
 
+def skippable_permutations(iterable, r=None):
+    items = [i for i in iterable]
+    if r is None:
+        r = len(items)
+    leave_prefix_len = r
+
+    def swap(i, j):
+        if i == j:
+            return
+        items[i], items[j] = items[j], items[i]
+
+    def set_skip(i):
+        nonlocal leave_prefix_len
+        if i is not None:
+            leave_prefix_len = i
+
+    def recurse(n):
+        nonlocal leave_prefix_len
+        if n == r:
+            set_skip((yield items[:r]))
+            return
+
+        for i in range(n, len(items)):
+            swap(n, i)
+            for item in recurse(n+1):
+                set_skip((yield item))
+                if leave_prefix_len <= n:
+                    if leave_prefix_len == n:
+                        leave_prefix_len = r
+                    break
+            swap(n, i)
+
+    return recurse(0)
+
+
 def play_game(item_ranks, mar_list):
     past_ranks = []
     for rank, mar in zip(item_ranks, mar_list):
