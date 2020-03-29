@@ -1,5 +1,7 @@
 import bisect
+from functools import reduce
 from itertools import permutations
+from operator import mul
 import statistics
 
 
@@ -38,6 +40,10 @@ def skippable_permutations(iterable, r=None):
     return recurse(0)
 
 
+def factorial(n):
+    return reduce(mul, range(1, n+1), 1)
+
+
 def play_game(item_ranks, mar_list):
     past_ranks = []
     for i, (rank, mar) in enumerate(zip(item_ranks, mar_list)):
@@ -52,10 +58,23 @@ def play_game(item_ranks, mar_list):
 
 
 def brute_force_expt_score(mar_list):
-    return statistics.mean(
-        item_ranks[play_game(item_ranks, mar_list)]
-        for item_ranks in permutations(range(len(mar_list)))
-    )
+    n = len(mar_list)
+    total = 0
+    iterator = skippable_permutations(range(n))
+
+    item_ranks = next(iterator)
+
+    while True:
+        choice = play_game(item_ranks, mar_list)
+        total += factorial(n-1-choice) * (
+            item_ranks[choice] if choice < n
+            else choice
+        )
+        try:
+            item_ranks = iterator.send(choice)
+        except StopIteration:
+            break
+    return total / factorial(len(mar_list))
 
 
 def gen_mar_lists(N):
