@@ -47,14 +47,10 @@ def skippable_insertions(n):
         increment_ranges()
 
 
-def play_game(item_ranks, mar_list):
-    past_ranks = []
-    for rank, mar in zip(item_ranks, mar_list):
-        local_rank = bisect.bisect(past_ranks, rank)
+def play_game(local_ranks, mar_list):
+    for i, (local_rank, mar) in enumerate(zip(local_ranks, mar_list)):
         if local_rank < mar:
-            return rank
-        else:
-            past_ranks.insert(local_rank, rank)
+            return i
 
     else:
         return len(mar_list)
