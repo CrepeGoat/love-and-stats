@@ -3,39 +3,48 @@ from itertools import permutations
 import statistics
 
 
-def skippable_permutations(iterable, r=None):
-    items = [i for i in iterable]
-    if r is None:
-        r = len(items)
-    leave_prefix_len = r
+def paused_iter(iterable):
+    iterator = iter(iterable)
+    while True:
+        item = next(iterator)
+        while (yield item):
+            pass
 
-    def swap(i, j):
-        if i == j:
-            return
-        items[i], items[j] = items[j], items[i]
+
+def skippable_insertions(n):
+    leave_prefix_len = n
 
     def set_skip(i):
         nonlocal leave_prefix_len
         if i is not None:
             leave_prefix_len = i
 
-    def recurse(n):
-        nonlocal leave_prefix_len
-        if n == r:
-            set_skip((yield items[:r]))
-            return
+    ranges = []
 
-        for i in range(n, len(items)):
-            swap(n, i)
-            for item in recurse(n+1):
-                set_skip((yield item))
-                if leave_prefix_len <= n:
-                    if leave_prefix_len == n:
-                        leave_prefix_len = r
-                    break
-            swap(n, i)
+    def fill_ranges():
+        for i in range(len(ranges), n):
+            ranges.append(paused_iter(range(i+1)))
+            next(ranges[-1])
 
-    return recurse(0)
+    def increment_ranges():
+        while ranges:
+            try:
+                next(ranges[-1])
+                break
+            except StopIteration:
+                ranges.pop()
+
+    def yield_value():
+        return tuple(r.send(True) for r in ranges)
+    
+    fill_ranges()
+
+    while ranges:
+        fill_ranges()
+        prefix_len = (yield yield_value())
+        if prefix_len is not None:
+            del ranges[prefix_len:]
+        increment_ranges()
 
 
 def play_game(item_ranks, mar_list):
