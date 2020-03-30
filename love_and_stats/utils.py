@@ -1,5 +1,6 @@
 import bisect
-from itertools import permutations
+from functools import reduce
+from operator import mul
 import statistics
 
 
@@ -47,6 +48,10 @@ def skippable_insertions(n):
         increment_ranges()
 
 
+def nPr(n, r):
+    return reduce(mul, range(n-r+1, n+1), 1)
+
+
 def play_game(local_ranks, mar_list):
     for i, (local_rank, mar) in enumerate(zip(local_ranks, mar_list)):
         if local_rank < mar:
@@ -56,11 +61,37 @@ def play_game(local_ranks, mar_list):
         return len(mar_list)
 
 
+def insertions_to_permutation(insertions):
+    def invert_perm(perm):
+        result = [None for _ in range(len(perm))]
+        for i, p in enumerate(perm):
+            result[p] = i
+        return result
+
+    result = []
+    for i, pos in enumerate(insertions):
+        result.insert(pos, i)
+    return invert_perm(result)
+
+
 def brute_force_expt_score(mar_list):
-    return statistics.mean(
-        play_game(item_ranks, mar_list)
-        for item_ranks in permutations(range(len(mar_list)))
-    )
+    n = len(mar_list)
+    total = 0
+    iterator = skippable_insertions(n)
+
+    local_ranks = next(iterator)
+
+    while True:
+        choice = play_game(local_ranks, mar_list)
+        total += nPr(n, choice) * (
+            insertions_to_permutation(local_ranks)[choice] if choice < n
+            else choice
+        )
+        try:
+            item_ranks = iterator.send(choice)
+        except StopIteration:
+            break
+    return total / nPr(n, n)
 
 
 def gen_mar_lists(N):
