@@ -1,18 +1,22 @@
+from love_and_stats import utils
+
+
 def int_div_ceil(n, d):
     return -((-n) // d)
 
 
 def reviter_max_allowable_ranks(N):
-    beta_expt = N
+    riter_betas = iter(utils.riter_round_expt_scores(N))
+    n2, beta_expt = next(riter_betas)
+    assert n2 == N+1
+
     for n in range(N, 0, -1):
         m = N-n
         i_hat = int(int_div_ceil(beta_expt*(n+1) - m, (N+1)))
         yield i_hat
 
-        beta_expt = (
-            ((n-i_hat) / n)*beta_expt
-            + (i_hat / (n*(n+1))) * (m + 0.5*(i_hat-1)*(N+1))
-        )
+        n2, beta_expt = riter_betas.send(i_hat)
+        assert n2 == n
 
 
 def max_allowable_ranks(N):
