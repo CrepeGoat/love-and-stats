@@ -1,9 +1,12 @@
+def int_div_ceil(n, d):
+    return -((-n) // d)
+
 
 def reviter_max_allowable_ranks(N):
     beta_expt = N
     for n in range(N, 0, -1):
         m = N-n
-        i_hat = (beta_expt*(n+1) - m)/(N+1)
+        i_hat = int(int_div_ceil(beta_expt*(n+1) - m, (N+1)))
         yield i_hat
 
         beta_expt = (
