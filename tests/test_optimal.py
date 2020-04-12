@@ -25,6 +25,6 @@ def test_opt_mar_is_feasible(opt_mar_list):
 @pytest.mark.parametrize('some_mar_list', list(utils.gen_mar_lists(4)))
 def test_mar_is_optimal(some_mar_list):
     assert (
-        utils.brute_force_expt_score(optimal.max_allowable_ranks(len(some_mar_list)))
-        <= utils.brute_force_expt_score(some_mar_list)
+        utils.expt_score(optimal.max_allowable_ranks(len(some_mar_list)))
+        <= utils.expt_score(some_mar_list)
     )

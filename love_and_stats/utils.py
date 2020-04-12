@@ -1,6 +1,5 @@
 import bisect
-from itertools import permutations
-import statistics
+from fractions import Fraction
 
 
 def play_game(item_ranks, mar_list):
@@ -16,11 +15,39 @@ def play_game(item_ranks, mar_list):
         return len(mar_list)
 
 
-def brute_force_expt_score(mar_list):
-    return statistics.mean(
-        play_game(item_ranks, mar_list)
-        for item_ranks in permutations(range(len(mar_list)))
-    )
+def riter_round_expt_scores(N, score_on_bust=None):
+    """
+    Iterates in reverse round order the expected round scores for a particular
+    MAR list. MAR items are passed in via the generator `send` method.
+    """
+    beta_expt = score_on_bust if score_on_bust is not None else N
+    for n in range(N, 0, -1):
+        i = Fraction((yield (n+1, beta_expt)))
+
+        m = N-n
+        beta_expt = (
+            ((n-i) / n) * beta_expt
+            + (i / n) * (m + (i-1)*(N+1)/2) / (n+1)
+        )
+
+    yield (n, beta_expt)
+
+
+def send_to(generator, values):
+    """
+    Iterates items yielded from passing values to a generator object via its
+    `send` method.
+    """
+    iterator = iter(generator)
+    yield next(iterator)
+    for value in values:
+        yield iterator.send(value)
+
+
+def expt_score(mar_list):
+    for _, result in send_to(riter_round_expt_scores(len(mar_list)), mar_list[::-1]):
+        pass
+    return result
 
 
 def gen_mar_lists(N):
