@@ -1,7 +1,7 @@
 from love_and_stats import utils
 
 
-def int_div_ceil(n, d):
+def _int_div_ceil(n, d):
     return -((-n) // d)
 
 
@@ -12,7 +12,7 @@ def reviter_max_allowable_ranks(N):
 
     for n in range(N, 0, -1):
         m = N - n
-        i_hat = int(int_div_ceil(beta_expt * (n + 1) - m, (N + 1)))
+        i_hat = int(_int_div_ceil(beta_expt * (n + 1) - m, (N + 1)))
         yield i_hat
 
         n2, beta_expt = riter_betas.send(i_hat)
