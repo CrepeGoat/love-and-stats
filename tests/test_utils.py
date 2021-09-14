@@ -1,8 +1,10 @@
-import pytest
-from love_and_stats import utils
-
 from itertools import permutations
 import statistics
+
+import hypothesis as hyp
+from utils import _strategies_ranks
+
+from love_and_stats import utils
 
 
 def _expt_score_brute(mar_list):
@@ -12,6 +14,6 @@ def _expt_score_brute(mar_list):
     )
 
 
-@pytest.mark.parametrize("some_mar_list", list(utils.gen_mar_lists(4)))
-def test_expt_score(some_mar_list):
-    assert float(utils.expt_score(some_mar_list)) == _expt_score_brute(some_mar_list)
+@hyp.given(ranks=_strategies_ranks(7))
+def test_expt_score(ranks):
+    assert float(utils.expt_score(ranks)) == _expt_score_brute(ranks)
