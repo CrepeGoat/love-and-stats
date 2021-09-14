@@ -22,13 +22,12 @@ def riter_round_expt_scores(N, score_on_bust=None):
     """
     beta_expt = score_on_bust if score_on_bust is not None else N
     for n in range(N, 0, -1):
-        i = Fraction((yield (n+1, beta_expt)))
+        i = Fraction((yield (n + 1, beta_expt)))
 
-        m = N-n
-        beta_expt = (
-            ((n-i) / n) * beta_expt
-            + (i / n) * (m + (i-1)*(N+1)/2) / (n+1)
-        )
+        m = N - n
+        beta_expt = ((n - i) / n) * beta_expt + (i / n) * (
+            m + (i - 1) * (N + 1) / 2
+        ) / (n + 1)
 
     yield (n, beta_expt)
 
@@ -51,17 +50,11 @@ def expt_score(mar_list):
 
 
 def gen_mar_lists(N):
-
     def recurse(N, suffix=()):
         if N == 0:
             yield suffix
             return
 
-        yield from (
-            mar
-            for i in range(N+1)
-            for mar in recurse(N-1, (i,)+suffix) 
-        )
+        yield from (mar for i in range(N + 1) for mar in recurse(N - 1, (i,) + suffix))
 
     return recurse(N)
-

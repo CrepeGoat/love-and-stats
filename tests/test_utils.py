@@ -12,9 +12,8 @@ def brute_force_expt_score(mar_list):
     )
 
 
-@pytest.mark.parametrize('some_mar_list', list(utils.gen_mar_lists(4)))
+@pytest.mark.parametrize("some_mar_list", list(utils.gen_mar_lists(4)))
 def test_expt_score(some_mar_list):
-    assert (
-        float(utils.expt_score(some_mar_list))
-        == brute_force_expt_score(some_mar_list)
+    assert float(utils.expt_score(some_mar_list)) == brute_force_expt_score(
+        some_mar_list
     )
