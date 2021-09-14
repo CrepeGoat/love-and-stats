@@ -2,7 +2,7 @@ import hypothesis as hyp
 import hypothesis.strategies as hyp_st
 
 from utils import _strategies_ranks
-from love_and_stats import optimal, utils
+from love_and_stats import optimal, simulate
 
 
 @hyp.given(optimal_ranks=hyp_st.integers(1, 200).map(optimal.max_allowable_ranks))
@@ -20,4 +20,4 @@ def test_mar_is_feasible(optimal_ranks):
 def test_mar_is_optimal(ranks):
     n = len(ranks)
     optimal_ranks = optimal.max_allowable_ranks(n)
-    assert utils.expt_score(optimal_ranks) <= utils.expt_score(ranks)
+    assert simulate.expt_score(optimal_ranks) <= simulate.expt_score(ranks)

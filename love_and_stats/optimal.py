@@ -1,4 +1,4 @@
-from love_and_stats import utils
+from love_and_stats import simulate
 
 
 def _int_div_ceil(n, d):
@@ -6,7 +6,7 @@ def _int_div_ceil(n, d):
 
 
 def reviter_max_allowable_ranks(N):
-    riter_betas = iter(utils.riter_round_expt_scores(N))
+    riter_betas = iter(simulate.riter_round_expt_scores(N))
     n2, beta_expt = next(riter_betas)
     assert n2 == N + 1
 
