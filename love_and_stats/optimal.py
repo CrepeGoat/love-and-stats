@@ -20,7 +20,8 @@ def reviter_max_allowable_ranks(N):
 
 
 def max_allowable_ranks(N):
-    result = tuple(reviter_max_allowable_ranks(N))[::-1]
+    result = list(reviter_max_allowable_ranks(N))
+    result.reverse()
 
     assert len(result) == N
     return result
