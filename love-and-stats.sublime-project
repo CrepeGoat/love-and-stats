@@ -1,20 +1,28 @@
 {
-	"build_systems": [
-		{
-			"name": "Run",
-			"cmd": "python3 $file",
-		},
-		{
-			"name": "Test",
-			"working_dir": "$project_path",
-			"cmd": ["venv/bin/python", "-m", "pytest"],
-		},
-	],
-
-	"folders":
-	[
-		{
-			"path": "."
-		}
-	]
+    "folders":
+    [
+        {
+            "path": "."
+        }
+    ],
+    "build_systems": [
+        {
+            "name": "New Terminal",
+            "cmd": [
+                "/nix/store/fmm3v288vjr720bih9lznp7q4bi2yarq-alacritty-0.6.0/bin/alacritty",
+                "--working-directory",
+                "$project_path",
+            ],
+        }
+    ],
+    "settings":
+    {
+        "SublimeLinter.linters.pyflakes.executable": ["$project_path/venv/bin/python", "-m", "pyflakes"],
+        "SublimeLinter.linters.pycodestyle.executable": ["$project_path/venv/bin/python", "-m", "pycodestyle"],
+        "SublimeLinter.linters.pydocstyle.executable": ["$project_path/venv/bin/python", "-m", "pydocstyle"],
+        "SublimeLinter.linters.pylint.executable": ["$project_path/venv/bin/python", "-m", "pylint"],
+        "SublimeLinter.linters.mypy.executable": ["$project_path/venv/bin/python", "-m", "mypy"],
+        "sublack.black_command": "$project_path/venv/bin/black",
+        "sublack.black_on_save": true,
+    }
 }
